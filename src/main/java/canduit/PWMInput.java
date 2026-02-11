@@ -23,7 +23,7 @@ public class PWMInput implements AutoCloseable {
     /**
      * Request the period of the PWM input.
      * 
-     * @return The period in μs.
+     * @return The period in ns.
     */
     public int getPeriod() {
         byte[] data = canduit.readData(GPIO, 3);
@@ -43,13 +43,13 @@ public class PWMInput implements AutoCloseable {
         if (period <= 0) {
             return 0;
         }
-        return 1000000 / period;
+        return 1000000000 / period;
     }
 
     /**
      * Request the high time of the PWM input.
      * 
-     * @return The high time in μs.
+     * @return The high time in ns.
     */
     public int getHighTime() {
         byte[] data = canduit.readData(GPIO + 10, 3);
@@ -62,7 +62,7 @@ public class PWMInput implements AutoCloseable {
     /**
      * Request the low time of the PWM input.
      * 
-     * @return The low time in μs.
+     * @return The low time in ns.
     */
     public int getLowTime() {
         byte[] data = canduit.readData(GPIO + 20, 3);
