@@ -1,0 +1,78 @@
+apply plugin: 'maven-publish'
+
+// Versions and IDs
+def pubVersion = '0.0.1'
+def artifactGroupId = 'canduit'
+def baseArtifactId = 'CANduitLib' // Changed to match your project
+def templateVendorFile = "CANduitLib.json"
+
+// Folders
+def outputsFolder = file("$buildDir/outputs")
+def releasesRepoUrl = "maven"
+
+// 1. Task to generate the version file
+task outputVersions() {
+    doFirst {
+        outputsFolder.mkdirs()
+    }
+    doLast {
+        file("$outputsFolder/version.txt").write pubVersion
+    }
+}
+
+// 2. Standard Java Artifacts
+task sourcesJar(type: Jar) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+// 3. VendorDep JSON Task
+task vendordepJson(type: Copy) {
+    from templateVendorFile
+    into "$buildDir/repos/"
+    expand(version: pubVersion,
+           groupId: artifactGroupId,
+           artifactId: baseArtifactId)
+}
+
+task vendordepJsonZip(type: Zip, dependsOn: vendordepJson) {
+    destinationDirectory = outputsFolder
+    archiveBaseName = "CANduitLib"
+    from "$buildDir/repos/$templateVendorFile"
+}
+
+// 4. Publishing Configuration
+publishing {
+    publications {
+        java(MavenPublication) {
+            groupId = artifactGroupId
+            artifactId = "${baseArtifactId}-java"
+            version = pubVersion
+
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+        }
+
+        vendordep(MavenPublication) {
+            groupId = artifactGroupId
+            artifactId = "${baseArtifactId}-vendordep"
+            version = pubVersion
+            
+            artifact vendordepJsonZip
+        }
+    }
+    repositories {
+        maven {
+            url = releasesRepoUrl
+        }
+    }
+}
+
+// Hook everything into the build
+build.dependsOn outputVersions, vendordepJsonZip, sourcesJar, javadocJar
