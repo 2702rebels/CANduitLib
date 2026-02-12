@@ -7,7 +7,7 @@
     "mavenUrls": [
         "https://2702rebels.github.io/CANduitLib/maven/"
     ],
-    "jsonUrl": "https://2702rebels.github.io/CANduitLib//maven/CANduitLib.json",
+    "jsonUrl": "https://2702rebels.github.io/CANduitLib/maven/CANduitLib.json",
     "javaDependencies": [
         {
             "groupId": "${groupId}",
