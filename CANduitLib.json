@@ -1,6 +1,6 @@
 {
     "fileName": "CANduitLib.json",
-    "name": "CANduitLib",
+    "name": "canduitlib",
     "version": "${version}",
     "frcYear": "2026",
     "uuid": "186a49d9-a7f3-455f-9456-6b626c3b2848",

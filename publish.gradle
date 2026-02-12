@@ -3,7 +3,7 @@ apply plugin: 'maven-publish'
 // Versions and IDs
 def pubVersion = '0.0.1'
 def artifactGroupId = 'canduit'
-def baseArtifactId = 'CANduitLib'
+def baseArtifactId = 'canduitlib'
 def templateVendorFile = "CANduitLib.json"
 
 // Folders

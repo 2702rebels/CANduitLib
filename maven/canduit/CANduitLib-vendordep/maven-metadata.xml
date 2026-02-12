@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
   <groupId>canduit</groupId>
-  <artifactId>CANduitLib-vendordep</artifactId>
+  <artifactId>canduitlib-vendordep</artifactId>
   <versioning>
     <latest>0.0.1</latest>
     <release>0.0.1</release>
     <versions>
       <version>0.0.1</version>
     </versions>
-    <lastUpdated>20260212001403</lastUpdated>
+    <lastUpdated>20260212011152</lastUpdated>
   </versioning>
 </metadata>

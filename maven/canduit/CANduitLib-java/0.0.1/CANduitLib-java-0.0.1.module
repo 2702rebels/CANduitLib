@@ -2,7 +2,7 @@
   "formatVersion": "1.1",
   "component": {
     "group": "canduit",
-    "module": "CANduitLib-java",
+    "module": "canduitlib-java",
     "version": "0.0.1",
     "attributes": {
       "org.gradle.status": "release"
@@ -25,8 +25,8 @@
       },
       "files": [
         {
-          "name": "CANduitLib-java-0.0.1.jar",
-          "url": "CANduitLib-java-0.0.1.jar",
+          "name": "canduitlib-java-0.0.1.jar",
+          "url": "canduitlib-java-0.0.1.jar",
           "size": 4980,
           "sha512": "4b6271f111d6eb6bce919266fce26a4f7c1a5f39e8afb1a6cd4347bb1a9775fe53b0ec330b38edc3e9f98f69515fffec77932db620a9e160d276eb2507eae8af",
           "sha256": "cd4818cdc16cf9bf9c45086c915ecf7f5336157deaddd9bd14a29acc1bf3b246",
@@ -139,8 +139,8 @@
       ],
       "files": [
         {
-          "name": "CANduitLib-java-0.0.1.jar",
-          "url": "CANduitLib-java-0.0.1.jar",
+          "name": "canduitlib-java-0.0.1.jar",
+          "url": "canduitlib-java-0.0.1.jar",
           "size": 4980,
           "sha512": "4b6271f111d6eb6bce919266fce26a4f7c1a5f39e8afb1a6cd4347bb1a9775fe53b0ec330b38edc3e9f98f69515fffec77932db620a9e160d276eb2507eae8af",
           "sha256": "cd4818cdc16cf9bf9c45086c915ecf7f5336157deaddd9bd14a29acc1bf3b246",

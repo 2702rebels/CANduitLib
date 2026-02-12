@@ -1,6 +1,6 @@
 {
     "fileName": "CANduitLib.json",
-    "name": "CANduitLib",
+    "name": "canduitlib",
     "version": "0.0.1",
     "frcYear": "2026",
     "uuid": "186a49d9-a7f3-455f-9456-6b626c3b2848",
@@ -11,14 +11,14 @@
     "javaDependencies": [
         {
             "groupId": "canduit",
-            "artifactId": "CANduitLib-java",
+            "artifactId": "canduitlib-java",
             "version": "0.0.1"
         }
     ],
     "jniDependencies": [
         {
             "groupId": "canduit",
-            "artifactId": "CANduitLib-driver",
+            "artifactId": "canduitlib-driver",
             "version": "0.0.1",
             "skipInvalidPlatforms": true,
             "isJar": false,
@@ -35,7 +35,7 @@
     "cppDependencies": [
         {
             "groupId": "canduit",
-            "artifactId": "CANduitLib-cpp",
+            "artifactId": "canduitlib-cpp",
             "version": "0.0.1",
             "libName": "Vendor",
             "headerClassifier": "headers",
@@ -52,7 +52,7 @@
         },
         {
             "groupId": "canduit",
-            "artifactId": "CANduitLib-driver",
+            "artifactId": "canduitlib-driver",
             "version": "0.0.1",
             "libName": "VendorDriver",
             "headerClassifier": "headers",
