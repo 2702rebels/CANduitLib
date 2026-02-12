@@ -2,7 +2,7 @@
     "fileName": "CANduitLib.json",
     "name": "CANduitLib",
     "version": "${version}",
-    "frcYear": "2026beta",
+    "frcYear": "2026",
     "uuid": "186a49d9-a7f3-455f-9456-6b626c3b2848",
     "mavenUrls": [
         "https://2702rebels.github.io/CANduitLib/maven/"
