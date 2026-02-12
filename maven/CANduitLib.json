@@ -15,22 +15,6 @@
             "version": "0.0.1"
         }
     ],
-    "jniDependencies": [
-        {
-            "groupId": "canduit",
-            "artifactId": "canduitlib-java",
-            "version": "0.0.1",
-            "skipInvalidPlatforms": true,
-            "isJar": false,
-            "validPlatforms": [
-                "windowsx86-64",
-                "linuxarm64",
-                "linuxx86-64",
-                "linuxathena",
-                "linuxarm32",
-                "osxuniversal"
-            ]
-        }
-    ],
+    "jniDependencies": [],
     "cppDependencies": []
 }
