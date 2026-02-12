@@ -3,7 +3,7 @@ apply plugin: 'maven-publish'
 // Versions and IDs
 def pubVersion = '0.0.1'
 def artifactGroupId = 'canduit'
-def baseArtifactId = 'CANduitLib' // Changed to match your project
+def baseArtifactId = 'CANduitLib'
 def templateVendorFile = "CANduitLib.json"
 
 // Folders
@@ -34,7 +34,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 // 3. VendorDep JSON Task
 task vendordepJson(type: Copy) {
     from templateVendorFile
-    into "$buildDir/repos/"
+    into "maven/"
     expand(version: pubVersion,
            groupId: artifactGroupId,
            artifactId: baseArtifactId)
@@ -43,7 +43,7 @@ task vendordepJson(type: Copy) {
 task vendordepJsonZip(type: Zip, dependsOn: vendordepJson) {
     destinationDirectory = outputsFolder
     archiveBaseName = "CANduitLib"
-    from "$buildDir/repos/$templateVendorFile"
+    from "maven/$templateVendorFile"
 }
 
 // 4. Publishing Configuration
