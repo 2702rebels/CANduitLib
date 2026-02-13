@@ -66,5 +66,6 @@ public class CANduit {
     void writeData(int apiIndex, int apiClass, byte[] data) {
         int apiId = apiClass << 4 | apiIndex;
         can.writePacket(data, apiId);
+        
     }
 }
