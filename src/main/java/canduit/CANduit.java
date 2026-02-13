@@ -44,14 +44,14 @@ public class CANduit {
     void setUpPin(int gpio, int mode) {
         int apiClass = 1;
         int apiIndex = gpio;
-        int apiId = apiClass << 6 | apiIndex;
+        int apiId = apiClass << 4 | apiIndex;
         byte[] data = {(byte) mode};
         can.writePacket(data, apiId);
     }
 
     byte[] readData(int gpio, int apiClass) {
         int apiIndex = gpio;
-        int apiId = apiClass << 6 | apiIndex;
+        int apiId = apiClass << 4 | apiIndex;
         can.writeRTRFrame(8, apiId);
         boolean success = can.readPacketTimeout(apiId, 100, data);
 
@@ -63,7 +63,7 @@ public class CANduit {
     }
 
     void writeData(int apiIndex, int apiClass, byte[] data) {
-        int apiId = apiClass << 6 | apiIndex;
+        int apiId = apiClass << 4 | apiIndex;
         can.writePacket(data, apiId);
     }
 }

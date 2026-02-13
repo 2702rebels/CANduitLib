@@ -27,11 +27,11 @@
         {
           "name": "canduitlib-java-0.0.1.jar",
           "url": "canduitlib-java-0.0.1.jar",
-          "size": 4980,
-          "sha512": "4b6271f111d6eb6bce919266fce26a4f7c1a5f39e8afb1a6cd4347bb1a9775fe53b0ec330b38edc3e9f98f69515fffec77932db620a9e160d276eb2507eae8af",
-          "sha256": "cd4818cdc16cf9bf9c45086c915ecf7f5336157deaddd9bd14a29acc1bf3b246",
-          "sha1": "07e9221ad4fb142ca7b3dd41acd92aceb8c7b1af",
-          "md5": "082a3c4f148ef4199a5c3bc7da40b990"
+          "size": 4978,
+          "sha512": "5d6f24c41739004bb02190d96703f37a5cb33224e58903e7cbb3868b3f2f7d3274a5d557bb9e1c4b8e94c24bb50aea27149bf9b8ad242c17c6d696463802d7d6",
+          "sha256": "119fd9394c99c1d1ce4a0f25b40028f449345b59b6db9fb33a05cdf5dbae0940",
+          "sha1": "c6d9cb8f0e287d572cb75674f2d5d99f0b24beb6",
+          "md5": "725c79b95a18047046f2161e43a9085a"
         }
       ]
     },
@@ -141,11 +141,11 @@
         {
           "name": "canduitlib-java-0.0.1.jar",
           "url": "canduitlib-java-0.0.1.jar",
-          "size": 4980,
-          "sha512": "4b6271f111d6eb6bce919266fce26a4f7c1a5f39e8afb1a6cd4347bb1a9775fe53b0ec330b38edc3e9f98f69515fffec77932db620a9e160d276eb2507eae8af",
-          "sha256": "cd4818cdc16cf9bf9c45086c915ecf7f5336157deaddd9bd14a29acc1bf3b246",
-          "sha1": "07e9221ad4fb142ca7b3dd41acd92aceb8c7b1af",
-          "md5": "082a3c4f148ef4199a5c3bc7da40b990"
+          "size": 4978,
+          "sha512": "5d6f24c41739004bb02190d96703f37a5cb33224e58903e7cbb3868b3f2f7d3274a5d557bb9e1c4b8e94c24bb50aea27149bf9b8ad242c17c6d696463802d7d6",
+          "sha256": "119fd9394c99c1d1ce4a0f25b40028f449345b59b6db9fb33a05cdf5dbae0940",
+          "sha1": "c6d9cb8f0e287d572cb75674f2d5d99f0b24beb6",
+          "md5": "725c79b95a18047046f2161e43a9085a"
         }
       ]
     }
