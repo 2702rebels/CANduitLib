@@ -39,6 +39,7 @@ public class CANduit {
 
     void removeGPIO(int gpio) {
         allocatedChannels.remove(gpio);
+        setUpPin(gpio, 0);
     }
 
     void setUpPin(int gpio, int mode) {
