@@ -1,0 +1,20 @@
+{
+    "fileName": "CANduitLib.json",
+    "name": "canduitlib",
+    "version": "0.0.2",
+    "frcYear": "2026",
+    "uuid": "186a49d9-a7f3-455f-9456-6b626c3b2848",
+    "mavenUrls": [
+        "https://2702rebels.github.io/CANduitLib/maven/"
+    ],
+    "jsonUrl": "https://2702rebels.github.io/CANduitLib/maven/CANduitLib.json",
+    "javaDependencies": [
+        {
+            "groupId": "com.2702rebels",
+            "artifactId": "canduitlib-java",
+            "version": "0.0.2"
+        }
+    ],
+    "jniDependencies": [],
+    "cppDependencies": []
+}
