@@ -1,4 +1,4 @@
-package canduit;
+package com.rebels2702.canduit;
 /**
  * Class representing a digital output on the CANduit device.
  */

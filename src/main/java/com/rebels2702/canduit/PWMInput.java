@@ -1,6 +1,6 @@
-package canduit;
+package com.rebels2702.canduit;
 
-import canduit.util.ByteManipulator;
+import com.rebels2702.canduit.util.ByteManipulator;
 /**
  * Class representing a PWM input on the CANduit device. This class allows you to read the period, frequency, high time, low time, and duty percentage of a PWM signal on a GPIO pin on the CANduit.
  */
@@ -26,7 +26,7 @@ public class PWMInput implements AutoCloseable {
      * @return The period in ns.
     */
     public int getPeriod() {
-        byte[] data = canduit.readData(GPIO, 3);
+        byte[] data = canduit.readData(GPIO, 3, 4);
         if (data == null) {
             return 0;
         }
@@ -52,7 +52,7 @@ public class PWMInput implements AutoCloseable {
      * @return The high time in ns.
     */
     public int getHighTime() {
-        byte[] data = canduit.readData(GPIO + 10, 3);
+        byte[] data = canduit.readData(GPIO + 10, 3, 4);
         if (data == null) {
             return 0;
         }
@@ -65,7 +65,7 @@ public class PWMInput implements AutoCloseable {
      * @return The low time in ns.
     */
     public int getLowTime() {
-        byte[] data = canduit.readData(GPIO + 20, 3);
+        byte[] data = canduit.readData(GPIO + 20, 3, 4);
         if (data == null) {
             return 0;
         }

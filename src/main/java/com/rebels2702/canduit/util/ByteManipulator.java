@@ -1,4 +1,4 @@
-package canduit.util;
+package com.rebels2702.canduit.util;
 
 /**
  * Utility class for manipulating bytes.

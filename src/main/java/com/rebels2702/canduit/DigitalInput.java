@@ -1,4 +1,4 @@
-package canduit;
+package com.rebels2702.canduit;
 /**
  * Class representing a digital input on the CANduit device. This class allows you to read the status of a digital input pin on the CANduit.
  */
@@ -24,7 +24,7 @@ public class DigitalInput implements AutoCloseable {
      * @return The status of the input.
     */
     public Boolean get() {
-        byte[] data = canduit.readData(GPIO, 2);
+        byte[] data = canduit.readData(GPIO, 2, 1);
         if (data == null) {
             return false;
         }

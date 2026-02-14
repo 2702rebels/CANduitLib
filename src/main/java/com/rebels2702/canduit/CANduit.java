@@ -1,4 +1,4 @@
-package canduit;
+package com.rebels2702.canduit;
 
 import edu.wpi.first.hal.CANData;
 import edu.wpi.first.wpilibj.CAN;
@@ -50,10 +50,10 @@ public class CANduit {
         can.writePacket(data, apiId);
     }
 
-    byte[] readData(int gpio, int apiClass) {
+    byte[] readData(int gpio, int apiClass, int length) {
         int apiIndex = gpio;
         int apiId = apiClass << 4 | apiIndex;
-        can.writeRTRFrame(8, apiId);
+        can.writeRTRFrame(length, apiId);
         boolean success = can.readPacketTimeout(apiId, 100, data);
 
         if (success) {
