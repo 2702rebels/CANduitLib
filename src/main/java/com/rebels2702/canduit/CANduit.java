@@ -1,7 +1,10 @@
 package com.rebels2702.canduit;
 
+import com.rebels2702.canduit.util.ByteManipulator;
+
 import edu.wpi.first.hal.CANData;
 import edu.wpi.first.wpilibj.CAN;
+
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -68,4 +71,32 @@ public class CANduit {
         can.writePacket(data, apiId);
         
     }
+
+    /**
+     * Sets the delay in ms of the broadcast interval of data from the CANduit
+     */
+    void setBroadcastPeriod(int msec){
+        int apiClass = 6;
+        int apiIndex = 0;
+        byte[] data = ByteManipulator.packData(
+                new int[]{msec}, 
+                new int[]{16},
+                2
+        );
+        writeData(apiIndex,apiClass, data);
+    } 
+
+    /**
+     * Sets the delay in ms of the time between PWM samples on each port on the CANduit
+     */
+    void setPWMSamplePeriod(int msec){
+        int apiClass = 6;
+        int apiIndex = 1;
+        byte[] data = ByteManipulator.packData(
+                new int[]{msec}, 
+                new int[]{16},
+                2
+        );
+        writeData(apiIndex,apiClass, data);
+    } 
 }

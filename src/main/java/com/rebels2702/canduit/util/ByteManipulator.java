@@ -1,4 +1,5 @@
 package com.rebels2702.canduit.util;
+import java.util.ArrayList;
 
 /**
  * Utility class for manipulating bytes.
@@ -20,4 +21,35 @@ public class ByteManipulator {
         }
         return (int) out;
     }
+
+    /**
+     * Convert an array of ints and an array of bitsizes into a byte array, arranged in little-endian
+     * @param data The values to convert
+     * @param bitSizes The respective bitsizes of the values
+     * @param byteSize The byteSize of the array
+     */
+    public static byte[] packData(int[] data, int[] bitSizes, int byteSize){
+        byte[] packedData = new byte[byteSize];
+        if (data.length != bitSizes.length) return packedData;
+
+        long bitset = 0;
+        int totalSize = 0;
+
+        for (int idx = 0; idx<data.length;idx++){
+            bitset |= (
+                (long) (data[idx] & ((1L << bitSizes[idx])-1))
+                ) << totalSize;
+            totalSize += bitSizes[idx];        
+        }
+
+        long mask = 0xFF;
+        for (int idx = 0; idx < byteSize;idx++){
+            packedData[idx] = (byte) ((int) (bitset & mask));
+            packedData[idx] = (byte) ((int) (bitset & mask));
+            bitset >>= 8;
+        }
+        
+        return packedData;
+    }
+    
 }
