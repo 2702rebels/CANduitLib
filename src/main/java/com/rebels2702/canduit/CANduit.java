@@ -20,7 +20,7 @@ public class CANduit {
      */
     public CANduit(int deviceID) {
         this.deviceID = deviceID;
-        this.can = new CAN(deviceID);
+        this.can = new CAN(deviceID); // Defaults to Team for manufacturer and device type
     }
 
     /**
