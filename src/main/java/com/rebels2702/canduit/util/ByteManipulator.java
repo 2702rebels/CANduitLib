@@ -58,7 +58,7 @@ public class ByteManipulator {
      * Convert an array of bytes and an array of bitsizes into a int array, where each int i is a bitsize[i] slice of the array of bytes, which should be ordered in little endian
      * @param data The values to convert
      * @param bitSizes The respective bitsizes of the values
-     * @param byteSize The byteSize of the array
+     * @return an array of ints
      */
     public static int[] unpackData(byte[] data, int[] bitSizes){
         int[] unpackedData = new int[bitSizes.length];
