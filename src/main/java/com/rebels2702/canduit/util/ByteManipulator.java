@@ -65,7 +65,7 @@ public class ByteManipulator {
         
         long dataInt = 0;
         for (int idx = 0; idx<data.length; idx++){
-            dataInt |= (((long)data[idx]) << (idx));
+            dataInt |= (((long)data[idx]) << (idx*8));
         }
 
         for (int idx = 0; idx<bitSizes.length; idx++){
