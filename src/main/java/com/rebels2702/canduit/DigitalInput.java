@@ -24,11 +24,11 @@ public class DigitalInput implements AutoCloseable {
      * @return The status of the input.
     */
     public Boolean get() {
-        byte[] data = canduit.readData(GPIO, 2, 1);
+        byte[] data = canduit.readData(0, 20, 4);
         if (data == null) {
             return false;
         }
-        return (data[0] & 0b00000001) == 1;
+        return (data[0] & GPIO) == 1;
     }
 
     /**

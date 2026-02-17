@@ -42,6 +42,8 @@ public class ByteManipulator {
             totalSize += bitSizes[idx];        
         }
 
+        if (totalSize >= 64) return packedData;
+
         long mask = 0xFF;
         for (int idx = 0; idx < byteSize;idx++){
             packedData[idx] = (byte) ((int) (bitset & mask));
@@ -50,6 +52,29 @@ public class ByteManipulator {
         }
         
         return packedData;
+    }
+
+    /**
+     * Convert an array of bytes and an array of bitsizes into a int array, where each int i is a bitsize[i] slice of the array of bytes, which should be ordered in little endian
+     * @param data The values to convert
+     * @param bitSizes The respective bitsizes of the values
+     * @param byteSize The byteSize of the array
+     */
+    public static int[] unpackData(byte[] data, int[] bitSizes){
+        int[] unpackedData = new int[bitSizes.length];
+        
+        long dataInt = 0;
+        for (int idx = 0; idx<data.length; idx++){
+            dataInt |= (((long)data[idx]) << (idx));
+        }
+
+        for (int idx = 0; idx<bitSizes.length; idx++){
+            unpackedData[idx] = (int) (dataInt & (1L << bitSizes[idx]));
+            dataInt <<= bitSizes[idx];
+        }
+
+        return unpackedData;
+
     }
     
 }

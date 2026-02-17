@@ -54,15 +54,15 @@ public class CANduit {
     }
 
     byte[] readData(int gpio, int apiClass, int length) {
+        
         int apiIndex = gpio;
         int apiId = apiClass << 4 | apiIndex;
-        can.writeRTRFrame(length, apiId);
-        boolean success = can.readPacketTimeout(apiId, 100, data);
 
-        if (success) {
+        
+        if (can.readPacketNew(apiId,data)){
             return data.data;
         }
-        
+
         return null;
     }
 
