@@ -28,7 +28,7 @@ public class DigitalInput implements AutoCloseable {
         if (data == null) {
             return false;
         }
-        return (data[0] & GPIO) == 1;
+        return ((data[0] >> GPIO) & 1) == 1;
     }
 
     /**
