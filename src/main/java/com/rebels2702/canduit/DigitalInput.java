@@ -24,7 +24,7 @@ public class DigitalInput implements AutoCloseable {
      * @return The status of the input.
     */
     public Boolean get() {
-        byte[] data = canduit.readData(0, 20, 4);
+        byte[] data = canduit.getPacket(0, 20, 4);
         if (data == null) {
             return false;
         }

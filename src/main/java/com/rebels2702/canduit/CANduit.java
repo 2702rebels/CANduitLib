@@ -53,12 +53,34 @@ public class CANduit {
         can.writePacket(data, apiId);
     }
 
-    byte[] readData(int gpio, int apiClass, int length) {
+    /** 
+     * Sends an RTR frame to the CANduit and expects a response
+     * @param apiIndex The apiIndex of the identifier to request to
+     * @param apiClass The apiClass of the identifier to request to
+     * @param length The length of the data to recieve
+
+     */
+    byte[] readData(int apiIndex, int apiClass, int length){
+        int apiId = apiClass << 4 | apiIndex;
+        can.writeRTRFrame(length, apiId);
+        boolean success = can.readPacketTimeout(apiId, 100, data);
+
+        if (success) {
+            return data.data;
+        }
         
-        int apiIndex = gpio;
+        return null;
+    }
+
+    /**
+     * If available, consumes a specified data frame from the CANBus
+     * @param apiIndex The apiIndex of the identifier to consume
+     * @param apiClass The apiClass of the identifier to consume
+     * @param length The length of the data to recieve
+     */
+    byte[] getPacket(int apiIndex, int apiClass, int length) {
         int apiId = apiClass << 4 | apiIndex;
 
-        
         if (can.readPacketNew(apiId,data)){
             return data.data;
         }
