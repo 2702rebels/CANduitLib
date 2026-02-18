@@ -81,7 +81,7 @@ public class CANduit {
     byte[] getPacket(int apiIndex, int apiClass, int length) {
         int apiId = apiClass << 4 | apiIndex;
         
-        if (can.readPacketLatest(apiId,data)){
+        if (can.readPacketTimeout(apiId,100,data)){
             return data.data;
         }
 
