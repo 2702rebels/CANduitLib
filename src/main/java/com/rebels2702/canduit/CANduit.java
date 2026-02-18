@@ -73,15 +73,15 @@ public class CANduit {
     }
 
     /**
-     * If available, consumes a specified data frame from the CANBus
-     * @param apiIndex The apiIndex of the identifier to consume
-     * @param apiClass The apiClass of the identifier to consume
+     * If available, reads the lastest of a specified data frame from the CANBus
+     * @param apiIndex The apiIndex of the identifier to read
+     * @param apiClass The apiClass of the identifier to read 
      * @param length The length of the data to recieve
      */
     byte[] getPacket(int apiIndex, int apiClass, int length) {
         int apiId = apiClass << 4 | apiIndex;
-
-        if (can.readPacketNew(apiId,data)){
+        
+        if (can.readPacketLatest(apiId,data)){
             return data.data;
         }
 
