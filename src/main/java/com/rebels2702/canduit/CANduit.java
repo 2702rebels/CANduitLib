@@ -1,7 +1,10 @@
 package com.rebels2702.canduit;
 
+import com.rebels2702.canduit.util.ByteManipulator;
+
 import edu.wpi.first.hal.CANData;
 import edu.wpi.first.wpilibj.CAN;
+
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,8 +53,14 @@ public class CANduit {
         can.writePacket(data, apiId);
     }
 
-    byte[] readData(int gpio, int apiClass, int length) {
-        int apiIndex = gpio;
+    /** 
+     * Sends an RTR frame to the CANduit and expects a response
+     * @param apiIndex The apiIndex of the identifier to request to
+     * @param apiClass The apiClass of the identifier to request to
+     * @param length The length of the data to recieve
+
+     */
+    byte[] readData(int apiIndex, int apiClass, int length){
         int apiId = apiClass << 4 | apiIndex;
         can.writeRTRFrame(length, apiId);
         boolean success = can.readPacketTimeout(apiId, 100, data);
@@ -63,9 +72,53 @@ public class CANduit {
         return null;
     }
 
+    /**
+     * If available, reads the lastest of a specified data frame from the CANBus
+     * @param apiIndex The apiIndex of the identifier to read
+     * @param apiClass The apiClass of the identifier to read 
+     * @param length The length of the data to recieve
+     */
+    byte[] getPacket(int apiIndex, int apiClass, int length) {
+        int apiId = apiClass << 4 | apiIndex;
+        
+        if (can.readPacketTimeout(apiId,100,data)){
+            return data.data;
+        }
+
+        return null;
+    }
+
     void writeData(int apiIndex, int apiClass, byte[] data) {
         int apiId = apiClass << 4 | apiIndex;
         can.writePacket(data, apiId);
         
     }
+
+    /**
+     * Sets the delay in ms of the broadcast interval of data from the CANduit
+     */
+    void setBroadcastPeriod(int msec){
+        int apiClass = 6;
+        int apiIndex = 0;
+        byte[] data = ByteManipulator.packData(
+                new int[]{msec}, 
+                new int[]{16},
+                2
+        );
+        writeData(apiIndex,apiClass, data);
+    } 
+
+    /**
+     * Sets the delay in ms of the time between PWM samples on each port on the CANduit
+     */
+    void setPWMSamplePeriod(int msec){
+        int apiClass = 6;
+        int apiIndex = 1;
+        byte[] data = ByteManipulator.packData(
+                new int[]{msec}, 
+                new int[]{16},
+                2
+        );
+        writeData(apiIndex,apiClass, data);
+    } 
 }

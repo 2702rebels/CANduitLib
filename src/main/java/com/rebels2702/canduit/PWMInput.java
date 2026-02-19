@@ -26,11 +26,8 @@ public class PWMInput implements AutoCloseable {
      * @return The period in ns.
     */
     public int getPeriod() {
-        byte[] data = canduit.readData(GPIO, 3, 4);
-        if (data == null) {
-            return 0;
-        }
-        return ByteManipulator.bytesToInt(data);
+        byte[] data = canduit.getPacket(GPIO, 21, 8);
+        return ByteManipulator.unpackData(data, new int[]{32,32})[1];
     }
 
     /**
@@ -52,11 +49,8 @@ public class PWMInput implements AutoCloseable {
      * @return The high time in ns.
     */
     public int getHighTime() {
-        byte[] data = canduit.readData(GPIO + 10, 3, 4);
-        if (data == null) {
-            return 0;
-        }
-        return ByteManipulator.bytesToInt(data);
+        byte[] data = canduit.getPacket(GPIO, 21, 8);
+        return ByteManipulator.unpackData(data, new int[]{32,32})[0];
     }
 
     /**
@@ -65,11 +59,9 @@ public class PWMInput implements AutoCloseable {
      * @return The low time in ns.
     */
     public int getLowTime() {
-        byte[] data = canduit.readData(GPIO + 20, 3, 4);
-        if (data == null) {
-            return 0;
-        }
-        return ByteManipulator.bytesToInt(data);
+        byte[] data = canduit.getPacket(GPIO, 21, 8);
+        int[] dataInt = ByteManipulator.unpackData(data, new int[]{32,32});
+        return dataInt[1] - dataInt[0]; // period - highTime
     }
 
     /**
@@ -78,11 +70,14 @@ public class PWMInput implements AutoCloseable {
      * @return The duty percentage (0-100).
     */
     public int getDuty() {
-        int period = getPeriod();
+        byte[] data = canduit.getPacket(GPIO, 21, 8);
+        int[] dataInt = ByteManipulator.unpackData(data, new int[]{32,32});
+        
+        int period = dataInt[1];
         if (period <= 0) {
             return 0;
         }
-        return (getHighTime() * 100 + (period / 2)) / period;
+        return (dataInt[0] * 100 + (period / 2)) / period;
     }
 
     /**
