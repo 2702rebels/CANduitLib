@@ -94,7 +94,10 @@ public class CANduit {
         
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/main
 
     /**
      * Sets the delay in ms of the broadcast interval of data from the CANduit
@@ -123,5 +126,8 @@ public class CANduit {
         );
         writeData(apiIndex,apiClass, data);
     } 
+<<<<<<< HEAD
+>>>>>>> origin/main
+=======
 >>>>>>> origin/main
 }
