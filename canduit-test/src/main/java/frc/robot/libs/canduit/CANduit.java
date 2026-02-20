@@ -2,84 +2,204 @@ package frc.robot.libs.canduit;
 
 import edu.wpi.first.hal.CANData;
 import edu.wpi.first.wpilibj.CAN;
-import edu.wpi.first.wpilibj.Timer;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 /**
- * The main class for the CANduit library. This class manages the CAN communication and GPIO pin allocation for the CANduit device.
+ * The main class for the CANduit library. This class manages the CAN communication and GPIO pin
+ * allocation for the CANduit device.
  */
 public class CANduit {
-    private Set<Integer> allocatedChannels = ConcurrentHashMap.newKeySet();
-    private final int deviceID;
-    private final CAN can;
-    private final CANData data = new CANData();
+  private Map<Integer, Channel> channels = new HashMap<>();
+  private final CAN can;
+
+  private static final int CLASS_SET_MODE = 1;
+  private static final int CLASS_DIO = 2;
+  private static final int CLASS_BCAST_STATUS = 20;
+  private static final int CLASS_BCAST_PWM_VALUE = 21;
+
+  private static final int MODE_NONE = 0;
+  private static final int MODE_DIO_IN = 1;
+  private static final int MODE_DIO_OUT = 2;
+  private static final int MODE_PWM_IN = 3;
+
+  private abstract class Channel implements AutoCloseable {
+    protected final CANduit canduit;
+    protected final int gpio;
+    protected long timestamp;
+    protected final CANData data = new CANData();
+
+    protected Channel(CANduit canduit, int gpio, int mode) {
+      this.canduit = canduit;
+      this.gpio = gpio;
+      canduit.acquireGPIO(gpio, this);
+      canduit.configureGPIO(gpio, mode);
+    }
+
+    /** Updates the input. Must be invoked in the robot periodic. */
+    protected abstract void update();
+
+    /** Returns timestamp of the most recent value. */
+    public long getTimestamp() {
+      return timestamp;
+    }
+
+    /** Releases the channel. */
+    public void close() {
+      canduit.releaseGPIO(gpio);
+    }
+  }
+
+  private abstract class DigitalIO extends Channel {
+    protected static final byte[] k0 = new byte[] {0b00000000};
+    protected static final byte[] k1 = new byte[] {0b00000001};
+
+    protected boolean value;
+
+    private DigitalIO(CANduit canduit, int gpio, int mode) {
+      super(canduit, gpio, mode);
+    }
+
+    @Override
+    protected void update() {
+      // [!] CLASS_BCAST_STATUS returns the status for ALL pins and always uses API index 0
+      if (canduit.readDataLatest(0, CLASS_BCAST_STATUS, data) && data.length > 0) {
+        // byte 0: GPIO state - bits 0 through 7 correspond to GPIO 0 through 7
+        value = (data.data[0] & (0b00000001 << gpio)) == 1;
+        timestamp = data.timestamp;
+      }
+    }
+
+    /** Returns most recent value received. */
+    public boolean get() {
+      return value;
+    }
+  }
+
+  public class DigitalInput extends DigitalIO {
+    private DigitalInput(CANduit canduit, int gpio) {
+      super(canduit, gpio, MODE_DIO_IN);
+    }
+  }
+
+  public class DigitalOutput extends DigitalIO {
+    private DigitalOutput(CANduit canduit, int gpio) {
+      super(canduit, gpio, MODE_DIO_OUT);
+    }
+
+    /** Sets the output. */
+    public void set(boolean value) {
+      canduit.writeData(gpio, CLASS_DIO, value ? k1 : k0);
+    }
+  }
+
+  public class PWMInput extends Channel {
+    protected int period = -1;
+    protected int width = -1;
+
+    private PWMInput(CANduit canduit, int gpio) {
+      super(canduit, gpio, MODE_PWM_IN);
+    }
+
+    @Override
+    protected void update() {
+      if (canduit.readDataLatest(gpio, CLASS_BCAST_PWM_VALUE, data) && data.length == 8) {
+        final var bb = ByteBuffer.wrap(data.data).order(ByteOrder.LITTLE_ENDIAN);
+        width = bb.getInt();
+        period = bb.getInt();
+        timestamp = data.timestamp;
+      }
+    }
+
     /**
-     * Initializes a CANduit device.
-     * 
-     * @param deviceID The CAN ID of the CANduit device.
+     * Returns most recent period received (in nanoseconds).
+     *
+     * <p>Returns -1 if no valid value is present.
      */
-    public CANduit(int deviceID) {
-        this.deviceID = deviceID;
-        this.can = new CAN(deviceID);
+    public int getPeriod() {
+      return period;
     }
 
     /**
-     * Get the CAN device ID of the CANduit.
-     * @return The ID of the device.
-    */
-    public int getDeviceID() {
-        return deviceID;
+     * Returns most recent pulse width received (in nanoseconds). Returns -1 if no valid value is
+     * present.
+     */
+    public int getPulseWidth() {
+      return width;
+    }
+  }
+
+  /**
+   * Initializes a CANduit device.
+   *
+   * @param canID The CAN ID of the CANduit device.
+   */
+  public CANduit(int canID) {
+    this.can = new CAN(canID);
+  }
+
+  /** Acquires the specified GPIO and exposes it as a digital input. */
+  public DigitalInput createDigitalInput(int gpio) {
+    return new DigitalInput(this, gpio);
+  }
+
+  /** Acquires the specified GPIO and exposes it as a digital output. */
+  public DigitalOutput createDigitalOutput(int gpio) {
+    return new DigitalOutput(this, gpio);
+  }
+
+  /** Acquires the specified GPIO and exposes it as a generic PWM input. */
+  public PWMInput createPWMInput(int gpio) {
+    return new PWMInput(this, gpio);
+  }
+
+  /** Updates all registered input channels. Must be invoked in the robot periodic. */
+  public void update() {
+    CANData data = new CANData();
+    // if(readDataLatest(0, CLASS_BCAST_STATUS, data)) {
+    //     System.out.printf("%h, %h, %h, %h\n", data.data[0], data.data[1], data.data[2], data.data[3]);
+    // }
+    for (var channel : channels.values()) {
+      channel.update();
+    }
+  }
+
+  /** Acquires GPIO. */
+  private void acquireGPIO(int gpio, Channel channel) {
+    if (gpio < 0 || gpio > 7) {
+      throw new IllegalArgumentException("GPIO pin must be between 0 and 7.");
     }
 
-    void registerGPIO(int gpio) {
-        if (!allocatedChannels.add(gpio)) {
-            throw new IllegalArgumentException("GPIO pin " + gpio + " in use.");
-        }
+    if (channels.containsKey(gpio)) {
+      throw new IllegalArgumentException("GPIO pin " + gpio + " in use.");
     }
 
-    void removeGPIO(int gpio) {
-        allocatedChannels.remove(gpio);
-        setUpPin(gpio, 0);
-    }
+    channels.put(gpio, channel);
+  }
 
-    void setUpPin(int gpio, int mode) {
-        int apiClass = 1;
-        int apiIndex = gpio;
-        int apiId = apiClass << 4 | apiIndex;
-        byte[] data = {(byte) mode};
-        can.writePacket(data, apiId);
-    }
+  /** Releases GPIO. */
+  private void releaseGPIO(int gpio) {
+    channels.remove(gpio);
+    configureGPIO(gpio, MODE_NONE);
+  }
 
-    byte[] readData(int gpio, int apiClass, int length) {
-        int apiIndex = gpio;
-        int apiId = apiClass << 4 | apiIndex;
-        // System.out.println("Reading data");
-        // System.out.println("Length: " + length);
-        while (can.readPacketNew(apiId, data)) {
+  /** Configures GPIO mode. */
+  private void configureGPIO(int gpio, int mode) {
+    int apiIndex = gpio;
+    int apiId = CLASS_SET_MODE << 4 | apiIndex;
+    byte[] data = {(byte) mode};
+    can.writePacket(data, apiId);
+  }
 
-        }
-        can.writeRTRFrame(length, apiId);
-        // Timer.delay(0.005);
-        
-        Timer packetTimer = new Timer();
-        packetTimer.start();
+  /** Reads low-level data from the CAN. Returns latest packet. */
+  private boolean readDataLatest(int gpio, int apiClass, CANData data) {
+    return can.readPacketLatest(apiClass << 4 | gpio, data);
+  }
 
-        while (!can.readPacketNew(apiId, data)) {
-            if (packetTimer.hasElapsed(0.01)) {
-                System.out.println("Timed out waiting for packet with API class " + apiClass + " and GPIO " + gpio);
-                packetTimer.stop();
-                return null;
-            }
-        }
-        packetTimer.stop();
-        System.out.println("Data read for GPIO " + gpio + ", API class " + apiClass + ": " + data.data[0]);
-        return data.data;
-    }
-        // }
-
-    void writeData(int apiIndex, int apiClass, byte[] data) {
-        int apiId = apiClass << 4 | apiIndex;
-        can.writePacket(data, apiId);
-    }
+  /** Writes low-level data to the CAN. */
+  private void writeData(int gpio, int apiClass, byte[] data) {
+    can.writePacket(data, apiClass << 4 | gpio);
+  }
 }

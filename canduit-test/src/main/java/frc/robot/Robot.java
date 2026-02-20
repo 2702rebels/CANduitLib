@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.libs.canduit.CANduit;
 import frc.robot.subsystems.CANduitExample;
 
 /**
@@ -22,7 +23,11 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
 
-  private Timer timer = new Timer();
+  private final CANduit canduit = new CANduit(4);
+
+  private final CANduitExample canduitExample;
+
+  // private Timer timer = new Timer();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -32,6 +37,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    canduitExample = new CANduitExample(canduit);
   }
 
   /**
@@ -47,6 +53,7 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    canduit.update();
     CommandScheduler.getInstance().run();
   }
 
@@ -81,7 +88,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    CommandScheduler.getInstance().schedule(m_robotContainer.getOutputCommand());
+    // CommandScheduler.getInstance().schedule(m_robotContainer.getOutputCommand());
   }
 
   /** This function is called periodically during operator control. */
@@ -93,15 +100,15 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
     // CommandScheduler.getInstance().schedule(m_robotContainer.getLEDCommand()); //new WaitCommand(2).andThen(m_robotContainer.getLEDCommand())
-    timer.restart();
+    // timer.restart();
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    if (timer.advanceIfElapsed(0.1)) {
-      CommandScheduler.getInstance().schedule(m_robotContainer.getPWMCommand());
-    }
+    // if (timer.advanceIfElapsed(0.1)) {
+    //   CommandScheduler.getInstance().schedule(canduitExample.getTOFDistance());
+    // }
   }
 
   /** This function is called once when the robot is first started up. */
