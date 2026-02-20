@@ -1,7 +1,7 @@
 apply plugin: 'maven-publish'
 
 // Versions and IDs
-def pubVersion = '0.0.3'
+def pubVersion = '0.0.4'
 def artifactGroupId = 'com.2702rebels'
 def baseArtifactId = 'canduitlib'
 def templateVendorFile = "CANduitLib.json"
