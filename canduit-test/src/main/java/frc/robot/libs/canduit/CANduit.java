@@ -67,7 +67,7 @@ public class CANduit {
       // [!] CLASS_BCAST_STATUS returns the status for ALL pins and always uses API index 0
       if (canduit.readDataLatest(0, CLASS_BCAST_STATUS, data) && data.length > 0) {
         // byte 0: GPIO state - bits 0 through 7 correspond to GPIO 0 through 7
-        value = (data.data[0] & (0b00000001 << gpio)) == 1;
+        value = (data.data[0] & (0b00000001 << gpio)) != 0;
         timestamp = data.timestamp;
       }
     }
