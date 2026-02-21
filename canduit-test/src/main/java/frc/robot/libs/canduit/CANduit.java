@@ -41,6 +41,10 @@ public class CANduit {
     /** Updates the input. Must be invoked in the robot periodic. */
     protected abstract void update();
 
+    public int getPin() {
+      return gpio;
+    }
+
     /** Returns timestamp of the most recent value. */
     public long getTimestamp() {
       return timestamp;

@@ -10,10 +10,13 @@ public class CANduitExample extends SubsystemBase {
     private CANduit canduit;
     public CANduitExample(CANduit canduit) {
         this.canduit = canduit;
-        pwmInput = canduit.createPWMInput(6);
-        tofSensor = canduit.createPWMInput(2);
-        digInput = canduit.createDigitalInput(5);
-        digIn2 = canduit.createDigitalInput(7);
+        // pwmInput = canduit.createPWMInput(6);
+        // tofSensor = canduit.createPWMInput(2);
+        // digInput = canduit.createDigitalInput(5);
+        // digIn2 = canduit.createDigitalInput(7);
+        for (int i = 0; i <= 7; i++) {
+            digOuts[i] = canduit.createDigitalOutput(i);
+        }
     }
     // DigitalOutput digitalOutput = new DigitalOutput(canduit, 5);
     // DigitalInput digitalInput = new DigitalInput(canduit, 4);
@@ -25,16 +28,21 @@ public class CANduitExample extends SubsystemBase {
 
     CANduit.DigitalInput digIn2;
 
+    CANduit.DigitalOutput[] digOuts = new CANduit.DigitalOutput[8];
+
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Encoder angle", 360.0 * ((double)pwmInput.getPulseWidth() / Math.min((double)pwmInput.getPeriod(), 1025000.0)));
-        SmartDashboard.putNumber("encoderValue", pwmInput.getPulseWidth());
-        SmartDashboard.putNumber("encoderPeriod", pwmInput.getPeriod());
-                    // Timer.delay(0.01);
-        SmartDashboard.putNumber("TOF Distance", (tofSensor.getPulseWidth() - 1000000) * 3.0 / 4000.0 - 10);
-        SmartDashboard.putNumber("TOFValue", tofSensor.getPulseWidth());
-        SmartDashboard.putNumber("TOFPeriod", tofSensor.getPeriod());
+        // SmartDashboard.putNumber("Encoder angle", 360.0 * ((double)pwmInput.getPulseWidth() / Math.min((double)pwmInput.getPeriod(), 1025000.0)));
+        // SmartDashboard.putNumber("encoderValue", pwmInput.getPulseWidth());
+        // SmartDashboard.putNumber("encoderPeriod", pwmInput.getPeriod());
+        //             // Timer.delay(0.01);
+        // SmartDashboard.putNumber("TOF Distance", (tofSensor.getPulseWidth() - 1000000) * 3.0 / 4000.0 - 10);
+        // SmartDashboard.putNumber("TOFValue", tofSensor.getPulseWidth());
+        // SmartDashboard.putNumber("TOFPeriod", tofSensor.getPeriod());
 
-        SmartDashboard.putBoolean("switchValue", digInput.get());
+        // SmartDashboard.putBoolean("switchValue", digInput.get());
+        for (CANduit.DigitalOutput digitalOutput : digOuts) {
+            digitalOutput.set((int)(Timer.getFPGATimestamp() * 10 % 8) == digitalOutput.getPin());
+        }
     }
 }
